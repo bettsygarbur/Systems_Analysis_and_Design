@@ -53,10 +53,7 @@ The analysis was conducted following the methodology established in the Workshop
 
 Workshop_1/
 ├── README.md # This documentation file
-├── workshop_1_final_report.pdf # Complete analysis report in IEEE format
-└── workshop_1_source.tex # LaTeX source code for the report
-
-text
+└── workshop_1_final_report.pdf # Complete analysis report in IEEE format
 
 ### Team Composition
 
