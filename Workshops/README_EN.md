@@ -103,5 +103,3 @@ Workshop_1/
 **Global Impact:** The substantial participation metrics (15,664 entrants, 84,049 submissions) reflect international recognition of problematic internet use as a critical public health challenge, with the competition serving as a catalyst for advancing predictive modeling methodologies in pediatric behavioral health assessment.
 
 ---
-
-*This README documents the complete methodology, tools, and findings of our systems engineering analysis for Workshop 1.*
