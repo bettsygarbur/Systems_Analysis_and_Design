@@ -61,7 +61,7 @@ Workshop_1/
 - **Bettsy Liliana Garces Buritica** (Code: 20231020222)
 - **Marta Isabel Sanchez Caita** (Code: 20222020118)
 - **Luis Fernando Rojas Rada** (Code: 20222020242)
-- **[Team Member 4]** ()
+- **Mauricio Daniel Baes Sánchez** (Code: 20222020058)
 
 **Course Information:**
 - **Course:** Systems Analysis & Design
