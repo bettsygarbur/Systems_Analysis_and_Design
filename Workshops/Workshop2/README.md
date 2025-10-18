@@ -1,4 +1,4 @@
-# Workshop 1 - Systems Analysis & Design - Systems Engineering
+# Workshop 2 - Systems Analysis & Design - Systems Engineering
 ## Child Mind Institute - Problematic Internet Use Competition
 
 ## Overview  
