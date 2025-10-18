@@ -66,7 +66,7 @@ To address data variability and maintain stable predictions:
 This `README.md` outlines the project’s structure, the system’s development process, and references the corresponding architectural diagrams.  
 The repository also contains the complete project report in PDF format, which includes theoretical foundations, data sources, and validation results.
 
-[Link to final PDF report](./Workshop_2-Team_20.pdf)
+[Link to Workshop 2](./Workshop_2-Team_20.pdf)
 
 **Team Members:**
 - **Bettsy Liliana Garces Buritica** (Code: 20231020222)
