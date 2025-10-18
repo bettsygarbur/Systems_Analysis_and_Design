@@ -28,10 +28,10 @@ The system is organized into three main components:
 - Integrates with MySQL databases and cloud storage for clinical and accelerometer information.  
 
 #### Diagram 1: General System Flow (Client – Frontend – Backend)
-![Diagram 1](arquitectura.png)
+![Diagram 1](implementacion.png)
 
 #### Diagram 2: Data and Processing Architecture
-![Diagram 2](implementacion.png)
+![Diagram 2](arquitectura.png)
 
 ---
 
@@ -66,7 +66,7 @@ To address data variability and maintain stable predictions:
 This `README.md` outlines the project’s structure, the system’s development process, and references the corresponding architectural diagrams.  
 The repository also contains the complete project report in PDF format, which includes theoretical foundations, data sources, and validation results.
 
-[Link to final PDF report](./Final_Paper.pdf)
+[Link to final PDF report](./Workshop 2 - Team 20.pdf)
 
 **Team Members:**
 - **Bettsy Liliana Garces Buritica** (Code: 20231020222)
