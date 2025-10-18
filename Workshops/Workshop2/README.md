@@ -28,10 +28,10 @@ The system is organized into three main components:
 - Integrates with MySQL databases and cloud storage for clinical and accelerometer information.  
 
 #### Diagram 1: General System Flow (Client – Frontend – Backend)
-![Diagram 1](bfee3b87-0403-4869-891d-682f94fdec4a.png)
+![Diagram 1](arquitectura.png)
 
 #### Diagram 2: Data and Processing Architecture
-![Diagram 2](de8a4ef6-614e-41c2-91cf-4a0572361939.png)
+![Diagram 2](implementacion.png)
 
 ---
 
