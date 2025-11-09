@@ -84,4 +84,4 @@ Defined roles and milestone alignment, with emphasis on documentation, peer revi
 - Mauricio Daniel Baes Sánchez (code: 20222020058, mdbaess@udistrital.edu.co)
 
 
-[Link to Workshop 3](./Workshop_3-Team_20.pdf)
+[Link to Workshop 3](./workshop_3-Team_20.pdf)
