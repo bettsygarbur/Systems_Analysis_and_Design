@@ -82,4 +82,6 @@ Defined roles and milestone alignment, with emphasis on documentation, peer revi
 - Marta Isabel Sánchez Caita (code: 20222020118, maisanchezc@udistrital.edu.co)  
 - Luis Fernando Rojas Rada (code: 20222020242, lfrojasr@udistrital.edu.co)  
 - Mauricio Daniel Baes Sánchez (code: 20222020058, mdbaess@udistrital.edu.co)
+
+
 [Link to Workshop 3](./Workshop_3-Team_20.pdf)
