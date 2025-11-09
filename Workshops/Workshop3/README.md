@@ -1,10 +1,5 @@
 # Workshop 3 - Problematic Internet Use Prediction
 
-## Team Members
-- Bettsy Liliana Garcés Buriticá (code: 20231020222, blgarcesb@udistrital.edu.co)  
-- Marta Isabel Sánchez Caita (code: 20222020118, maisanchezc@udistrital.edu.co)  
-- Luis Fernando Rojas Rada (code: 20222020242, lfrojasr@udistrital.edu.co)  
-- Mauricio Daniel Baes Sánchez (code: 20222020058, mdbaess@udistrital.edu.co)  
 
 ## Reviewing and Refining of System Architecture
 
@@ -81,3 +76,10 @@ Defined roles and milestone alignment, with emphasis on documentation, peer revi
 - Child Mind Institute. Child Mind Institute — Problematic Internet Use, *Kaggle Competition Platform*, 2024. Available: https://www.kaggle.com/competitions/child-mind-institute-problematic-internet-use
 
 - RM503. CMI-Problematic_Internet_Usage, GitHub repository, 2024. Available: https://github.com/RM503/CMI-Problematic_Internet_Usage
+
+## Team Members
+- Bettsy Liliana Garcés Buriticá (code: 20231020222, blgarcesb@udistrital.edu.co)  
+- Marta Isabel Sánchez Caita (code: 20222020118, maisanchezc@udistrital.edu.co)  
+- Luis Fernando Rojas Rada (code: 20222020242, lfrojasr@udistrital.edu.co)  
+- Mauricio Daniel Baes Sánchez (code: 20222020058, mdbaess@udistrital.edu.co)
+[Link to Workshop 3](./Workshop_3-Team_20.pdf)
