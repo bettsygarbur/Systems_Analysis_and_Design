@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaggle Predictor - CMI Dataset</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🎯 Kaggle Predictor</h1>
+                <p class="subtitle">Predicción de Uso Problemático de Tecnología - Child Mind Institute</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Section: Upload File -->
+            <section class="card upload-section">
+                <div class="card-header">
+                    <h2>📤 Subir Archivo</h2>
+                    <p class="description">Carga un archivo CSV o Parquet con datos biométricos para predicción</p>
+                </div>
+                
+                <div class="upload-area" id="uploadArea">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <p>Arrastra tu archivo aquí o haz clic para seleccionar</p>
+                    <input type="file" id="fileInput" accept=".csv,.parquet" class="hidden-input">
+                </div>
+                
+                <button class="btn btn-primary" id="predictBtn" disabled>
+                    🚀 Realizar Predicción
+                </button>
+            </section>
+
+            <!-- Section: Model Metrics -->
+            <section class="card metrics-section">
+                <div class="card-header">
+                    <h2>📊 Métricas del Modelo</h2>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <span class="metric-label">Accuracy</span>
+                        <span class="metric-value" id="metric-accuracy">--</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Precision</span>
+                        <span class="metric-value" id="metric-precision">--</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Recall</span>
+                        <span class="metric-value" id="metric-recall">--</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">F1 Score</span>
+                        <span class="metric-value" id="metric-f1">--</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">ROC-AUC</span>
+                        <span class="metric-value" id="metric-roc_auc">--</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Feature Importance -->
+            <section class="card importance-section">
+                <div class="card-header">
+                    <h2>🎯 Top 10 Características Importantes</h2>
+                </div>
+                <div id="importanceChart" class="importance-chart">
+                    <p class="loading">Cargando características...</p>
+                </div>
+            </section>
+
+            <!-- Section: Predictions -->
+            <section class="card predictions-section" id="predictionsSection" style="display: none;">
+                <div class="card-header">
+                    <h2>✅ Resultados de Predicción</h2>
+                    <span class="badge" id="recordsCount">0 registros</span>
+                </div>
+                
+                <div class="predictions-summary">
+                    <div class="summary-card">
+                        <span class="summary-label">Registros Procesados</span>
+                        <span class="summary-value" id="recordsProcessed">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Uso Problemático (Sí)</span>
+                        <span class="summary-value positive" id="positiveCount">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Uso Normal (No)</span>
+                        <span class="summary-value negative" id="negativeCount">0</span>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="predictions-table" id="predictionsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Predicción</th>
+                                <th>Probabilidad (No)</th>
+                                <th>Probabilidad (Sí)</th>
+                                <th>Confianza</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+                </div>
+
+                <button class="btn btn-secondary" id="downloadBtn">
+                    📥 Descargar Resultados (CSV)
+                </button>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Kaggle Competition - Child Mind Institute Dataset | CatBoost Model</p>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="spinner"></div>
+        <p id="loadingText">Procesando...</p>
+    </div>
+
+    <!-- Script -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
