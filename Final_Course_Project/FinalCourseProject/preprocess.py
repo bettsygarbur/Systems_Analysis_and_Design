@@ -43,38 +43,38 @@ class DataPreprocessor:
         self.feature_columns = self.numeric_columns + self.categorical_columns
         return self
 
-    def transform(self, df):
-        """
-        Transforma los datos
-        """
-        df = df.copy()
-        
-        # Filtrar solo las columnas que existen en ambos (entrenamiento y predicción)
-        # Esto maneja archivos con columnas diferentes
-        available_numeric = [col for col in self.numeric_columns if col in df.columns]
-        available_categorical = [col for col in self.categorical_columns if col in df.columns]
-        
-        # Imputar valores numéricos faltantes
-        if available_numeric:
-            df[available_numeric] = self.imputer.transform(df[available_numeric])
-        
-        # Codificar variables categóricas
-        for col in available_categorical:
-            if col in self.label_encoders:
-                try:
-                    df[col] = self.label_encoders[col].transform(
-                        df[col].fillna('missing')
-                    )
-                except ValueError:
-                    # Si hay valores nuevos no vistos en entrenamiento
-                    df[col] = self.label_encoders[col].transform(
-                        df[col].fillna('missing').apply(
-                            lambda x: x if x in self.label_encoders[col].classes_ else 'missing'
-                        )
-                    )
-        
-        # Retornar solo columnas disponibles (mantener orden)
-        return df[available_numeric + available_categorical]
+def transform(self, df):
+    """
+    Transforma los datos manteniendo el mismo esquema de columnas del entrenamiento.
+    """
+    df = df.copy()
+
+    # Asegurar que existan todas las columnas numéricas del entrenamiento
+    for col in self.numeric_columns:
+        if col not in df.columns:
+            df[col] = np.nan
+
+    # Asegurar que existan todas las columnas categóricas del entrenamiento
+    for col in self.categorical_columns:
+        if col not in df.columns:
+            df[col] = 'missing'
+
+    # Imputar valores numéricos (siempre con el mismo set)
+    if self.numeric_columns:
+        df[self.numeric_columns] = self.imputer.transform(df[self.numeric_columns])
+
+    # Codificar categóricas
+    for col in self.categorical_columns:
+        if col in self.label_encoders:
+            le = self.label_encoders[col]
+            series = df[col].fillna('missing').astype(str)
+
+            # reemplazar categorías nuevas por 'missing'
+            series = series.apply(lambda x: x if x in le.classes_ else 'missing')
+            df[col] = le.transform(series)
+
+    # Retornar columnas en el mismo orden
+    return df[self.numeric_columns + self.categorical_columns]
 
     def fit_transform(self, df, target_column='sii'):
         """
