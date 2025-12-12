@@ -1,129 +1,135 @@
-# Systems Analysis & Design – Final Course Project  
+# Systems Analysis & Design – Final Course Project
 ## Problematic Internet Use (Child Mind Institute – Kaggle)
 
-Este repositorio contiene el **proyecto final completo** del curso **Systems Analysis & Design**, desarrollado a partir de la competencia **Child Mind Institute – Problematic Internet Use** de Kaggle.  
-El proyecto integra análisis de sistemas, diseño arquitectónico, machine learning y simulación computacional, siguiendo los Workshops 1–4 del curso.
+This repository contains the complete final project for the Systems Analysis & Design course, developed based on the Child Mind Institute – Problematic Internet Use Kaggle competition.  
+The project integrates systems analysis, architectural design, machine learning, and computational simulation, following Workshops 1–4 of the course.
 
 ---
 
-## 📌 Descripción del Proyecto
+## Project Description
 
-El uso problemático de internet (Problematic Internet Use, PIU) en niños y adolescentes está asociado con alteraciones del sueño, dificultades emocionales y bajo desempeño académico. La detección temprana es compleja debido a la naturaleza multifactorial del problema.
+Problematic Internet Use (PIU) in children and adolescents is associated with sleep disturbances, emotional difficulties, and poor academic performance. Early detection is challenging due to the multifactorial nature of the problem.
 
-Este proyecto aborda el PIU desde una **perspectiva de ingeniería de sistemas**, diseñando e implementando:
+This project addresses PIU from a systems engineering perspective by designing and implementing:
 
-- Un **modelo predictivo** para estimar la severidad del PIU.
-- Un **escenario de simulación** para analizar la evolución del problema en una población sintética.
-- Una **aplicación web** que expone el modelo mediante una API REST.
+- A predictive model to estimate PIU severity.
+- A simulation scenario to analyze the evolution of the problem in a synthetic population.
+- A web application that exposes the model through a REST API.
 
-La fuente de datos utilizada es la competencia oficial de Kaggle:
+The data source used is the official Kaggle competition:
 
-**Child Mind Institute – Problematic Internet Use**
-
----
-
-## 🎯 Objetivo General
-
-Diseñar e implementar un sistema que permita **predecir y analizar la severidad del uso problemático de internet** en niños y adolescentes, integrando datos clínicos, cuestionarios psicológicos y variables biométricas.
+Child Mind Institute – Problematic Internet Use
 
 ---
 
-## 📊 Dataset y Variable Objetivo
+## General Objective
 
-- **Dataset:** Child Mind Institute – Problematic Internet Use (Kaggle)
-- **Variable objetivo:** Severity Impairment Index (**sii**)
-- **Escala ordinal:**
+To design and implement a system capable of predicting and analyzing the severity of problematic internet use in children and adolescents by integrating clinical data, psychological questionnaires, and biometric variables.
+
+---
+
+## Dataset and Target Variable
+
+- Dataset: Child Mind Institute – Problematic Internet Use (Kaggle)
+- Target variable: Severity Impairment Index (sii)
+- Ordinal scale:
   - 0: No impairment
   - 1: Mild
   - 2: Moderate
   - 3: Severe
-- **Tipo de problema:** Clasificación ordinal semi-supervisada
-- **Métrica de evaluación:** Quadratic Weighted Kappa (QWK)
+- Problem type: Semi-supervised ordinal classification
+- Evaluation metric: Quadratic Weighted Kappa (QWK)
 
 ---
 
-## 🧠 Arquitectura del Sistema
+## System Architecture
 
-El sistema sigue una arquitectura modular basada en los Workshops del curso:
+The system follows a modular architecture based on the course workshops:
 
-1. **Ingesta de datos**
-   - Archivos CSV (datos clínicos y cuestionarios)
-   - Archivos Parquet (datos de acelerometría)
-
-2. **Preprocesamiento**
-   - Limpieza y normalización
-   - Manejo de valores faltantes
-   - Extracción de características
-
-3. **Escenario 1 – Predicción basada en datos**
-   - Modelo de Machine Learning (CatBoost)
-   - Clasificación multicategoría del sii (0–3)
-
-4. **Escenario 2 – Simulación basada en eventos**
-   - Autómata celular
-   - Evolución temporal del sii en una población sintética
-
-5. **Aplicación Web**
-   - API REST implementada con Flask
-   - Predicción y exportación de resultados
+1. Data ingestion (CSV and Parquet files)
+2. Data preprocessing and cleaning
+3. Scenario 1 – Data-driven prediction (Machine Learning)
+4. Scenario 2 – Event-driven simulation
+5. Web application with REST API
 
 ---
 
-## ⚙️ Escenario 1 – Modelo Predictivo
+## Scenario 1 – Predictive Model
 
-- **Modelo utilizado:** CatBoostClassifier
-- **Justificación:**
-  - Manejo nativo de variables categóricas
-  - Robustez ante datos faltantes
-  - Buen desempeño en datos tabulares heterogéneos
-
-El modelo predice la severidad del PIU en una escala ordinal (0–3) y también permite una clasificación binaria (normal / problemático).
+- Model used: CatBoostClassifier
+- Output type: Multiclass classification (sii 0–3)
+- The model also supports a binary classification (normal / problematic).
+- Relevant variables include PCIAT questionnaire scores, sleep scales, physical activity, and biometric features.
 
 ---
 
-## 🔄 Escenario 2 – Simulación (Autómata Celular)
+## Scenario 2 – Simulation
 
-El segundo escenario implementa una simulación basada en eventos para analizar el comportamiento del sistema a nivel poblacional.
+The second scenario implements an event-driven simulation using a cellular automaton.
 
-- Cada celda representa un individuo.
-- El estado corresponde al valor de `sii`.
-- Las reglas de transición consideran:
-  - Estado individual
-  - Nivel de uso de internet
-  - Influencia de vecinos
-  - Componente estocástico
-
-Este escenario permite estudiar estabilidad, sensibilidad y patrones emergentes del sistema.
+- Each cell represents an individual.
+- The state corresponds to the sii value.
+- Transition rules consider individual state, internet use level, and neighbor influence.
+- This scenario enables the analysis of system stability, sensitivity, and emergent patterns.
 
 ---
 
-## 🌐 Aplicación Web
+## Web Application
 
-El proyecto incluye una aplicación web que expone el modelo predictivo:
+The project includes a web application that exposes the predictive model:
 
-- **Backend:** Flask (API REST)
-- **Lenguaje:** Python
-- **Funcionalidades:**
-  - Carga de archivos CSV y Parquet
-  - Predicción del sii
-  - Clasificación binaria de riesgo
-  - Probabilidades y nivel de confianza
-  - Descarga de resultados en CSV
+- Backend: Flask (REST API)
+- Language: Python
+- Features:
+  - Upload of CSV and Parquet files
+  - sii prediction
+  - Binary risk classification
+  - Probability estimates and confidence level
+  - Download of results in CSV format
 
 ---
 
-## 📁 Estructura del Repositorio
+## Repository Structure
 
-```text
 Systems_Analysis_and_Design/
-│
-├── Catch_up/
-├── Workshops/
-├── Final_Course_Project/
-│   ├── FinalCourseProject/
-│   ├── The_final_version_of_the_paper.pdf
-│   ├── The_final_version_of_the_report.pdf
-│   ├── Final Poster - Team 20.pdf
-│   ├── Slides - Project Report.pdf
-│
-├── README.md
+- Catch_up/
+- Workshops/
+- Final_Course_Project/
+  - FinalCourseProject/
+  - The_final_version_of_the_paper.pdf
+  - The_final_version_of_the_report.pdf
+  - Final Poster - Team 20.pdf
+  - Slides - Project Report.pdf
+- README.md
+
+All final project deliverables are located in the Final_Course_Project directory.
+
+---
+
+## Final Deliverables
+
+This repository fulfills all requirements of the final course submission:
+
+1. Final version of the paper (IEEE format – PDF)
+2. Final version of the poster
+3. Final version of the report
+4. Presentation slides
+5. GitHub repository with the complete project
+
+---
+
+## Team Members
+
+- Bettsy Liliana Garcés Buriticá
+- Marta Isabel Sánchez Caita
+- Luis Fernando Rojas Rada
+
+Universidad Distrital Francisco José de Caldas  
+Course: Systems Analysis & Design
+
+---
+
+## References
+
+- Child Mind Institute – Problematic Internet Use, Kaggle Competition
+- Systems Analysis & Design course materials
