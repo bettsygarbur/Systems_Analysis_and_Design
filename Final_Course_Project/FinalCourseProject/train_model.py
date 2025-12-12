@@ -1,210 +1,203 @@
+import os
 import pickle
-import pandas as pd
-import numpy as np
-from catboost import CatBoostClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-from preprocess import load_and_preprocess
-from config import MODEL_PATH, TRAIN_DATA_PATH, CATBOOST_ITERATIONS
 import warnings
 
-warnings.filterwarnings('ignore')
+import numpy as np
+import pandas as pd
+from catboost import CatBoostClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+from preprocess import DataPreprocessor
+from config import MODEL_PATH, TRAIN_DATA_PATH, CATBOOST_ITERATIONS
+
+warnings.filterwarnings("ignore")
+
 
 class ModelTrainer:
     def __init__(self):
         self.model = None
         self.preprocessor = None
         self.metrics = {}
+        self.feature_names = []
 
     def train(self, data_path=TRAIN_DATA_PATH):
         """
-        Entrena el modelo CatBoost con los datos
+        Train CatBoost model using labeled rows (sii not NaN).
         """
         try:
-            print(f"📥 Cargando datos desde {data_path}...")
-            X, y, preprocessor = load_and_preprocess(data_path, target_column='sii')
-            self.preprocessor = preprocessor
-            
-            print(f"✅ Datos cargados: {X.shape}")
-            print(f"📊 Distribución del target: {y.value_counts().to_dict()}")
-            
-            # CRÍTICO: Eliminar valores NaN del target
-            valid_idx = y.notna()
-            X = X[valid_idx]
-            y = y[valid_idx]
-            
-            print(f"✅ Después de limpiar NaN: {X.shape}")
-            print(f"📊 Nueva distribución: {y.value_counts().to_dict()}")
-            
-            # Verificar que no hay NaN en el target
-            if y.isna().any():
-                raise ValueError("Target contiene NaN después de limpieza")
-            
-            # Entrenar modelo
-            print(f"\n🤖 Entrenando CatBoost (iteraciones: {CATBOOST_ITERATIONS})...")
+            print(f"📥 Loading training data from {data_path}...")
+            df = pd.read_csv(data_path)
+
+            if "sii" not in df.columns:
+                return False, 'Training file must contain column "sii".'
+
+            # Use only labeled rows
+            labeled = df.dropna(subset=["sii"]).copy()
+            labeled["sii"] = labeled["sii"].astype(int)
+
+            # Features
+            X_raw = labeled.drop(columns=["sii", "id"], errors="ignore")
+            y = labeled["sii"]
+
+            print(f"✅ Labeled data: {X_raw.shape}")
+            print(f"📊 Target distribution: {y.value_counts().to_dict()}")
+
+            # Preprocess
+            self.preprocessor = DataPreprocessor()
+            X = self.preprocessor.fit_transform(X_raw)
+
+            # Save feature names for feature importance
+            self.feature_names = list(X.columns)
+
+            # Train model
+            print(f"\n🤖 Training CatBoost (iterations: {CATBOOST_ITERATIONS})...")
             self.model = CatBoostClassifier(
                 iterations=CATBOOST_ITERATIONS,
                 verbose=False,
                 random_state=42,
-                task_type='CPU',
+                task_type="CPU",
                 allow_writing_files=False
             )
-            
-            self.model.fit(X, y, verbose=False)
-            
-            # Evaluar - VERSIÓN SIMPLIFICADA
+            self.model.fit(X, y)
+
+            # Evaluate (simple: on training set, consistent with your current app flow)
             y_pred = self.model.predict(X)
-            
-            # Calcular métricas de manera simple
+
             self.metrics = {
-                'accuracy': float(accuracy_score(y, y_pred)),
-                'precision': float(self._safe_precision(y, y_pred)),
-                'recall': float(self._safe_recall(y, y_pred)),
-                'f1': float(self._safe_f1(y, y_pred)),
-                'roc_auc': 0.0  # Simplificado para evitar errores
+                "accuracy": float(accuracy_score(y, y_pred)),
+                "precision": float(self._safe_precision(y, y_pred)),
+                "recall": float(self._safe_recall(y, y_pred)),
+                "f1": float(self._safe_f1(y, y_pred)),
+                "roc_auc": 0.0  # kept as 0.0 to avoid multi-class ROC issues
             }
-            
-            print(f"\n📈 Métricas del modelo:")
+
+            print("\n📈 Model metrics:")
             for metric, value in self.metrics.items():
                 print(f"   {metric}: {value:.4f}")
-            
-            # Guardar modelo
+
+            # Save model
             self.save_model(MODEL_PATH)
-            print(f"\n✅ Modelo guardado en {MODEL_PATH}")
-            
+            print(f"\n✅ Model saved at {MODEL_PATH}")
+
             return True, self.metrics
-            
+
         except Exception as e:
-            print(f"❌ Error durante entrenamiento: {str(e)}")
+            print(f"❌ Training error: {str(e)}")
             import traceback
             traceback.print_exc()
             self.model = None
             return False, str(e)
 
     def _safe_precision(self, y_true, y_pred):
-        """Calcula precision de forma segura"""
         try:
-            return precision_score(y_true, y_pred, average='weighted', zero_division=0)
+            return precision_score(y_true, y_pred, average="weighted", zero_division=0)
         except TypeError:
-            return precision_score(y_true, y_pred, average='weighted')
-        except:
+            return precision_score(y_true, y_pred, average="weighted")
+        except Exception:
             return 0.0
 
     def _safe_recall(self, y_true, y_pred):
-        """Calcula recall de forma segura"""
         try:
-            return recall_score(y_true, y_pred, average='weighted', zero_division=0)
+            return recall_score(y_true, y_pred, average="weighted", zero_division=0)
         except TypeError:
-            return recall_score(y_true, y_pred, average='weighted')
-        except:
+            return recall_score(y_true, y_pred, average="weighted")
+        except Exception:
             return 0.0
 
     def _safe_f1(self, y_true, y_pred):
-        """Calcula f1 de forma segura"""
         try:
-            return f1_score(y_true, y_pred, average='weighted', zero_division=0)
+            return f1_score(y_true, y_pred, average="weighted", zero_division=0)
         except TypeError:
-            return f1_score(y_true, y_pred, average='weighted')
-        except:
+            return f1_score(y_true, y_pred, average="weighted")
+        except Exception:
             return 0.0
 
     def predict(self, X):
         """
-        Realiza predicciones
+        Predict using already-preprocessed features (DataFrame).
+        Returns (predictions, probabilities).
         """
         if self.model is None:
-            raise ValueError("Modelo no entrenado. Llama a train() primero.")
-        
+            raise ValueError("Model not trained. Call train() first.")
+
         predictions = self.model.predict(X)
-        
-        # Obtener probabilidades de forma segura
+
         try:
             probabilities = self.model.predict_proba(X)
-            
-            # Asegurar formato correcto
-            if probabilities.ndim == 1:
-                # Si es 1D, lo asumimos como probabilidad de clase 1
-                probabilities = np.column_stack([
-                    1 - probabilities,
-                    probabilities
-                ])
-            elif probabilities.shape[1] == 1:
-                # Si tiene solo una columna, crear la otra
-                probabilities = np.column_stack([
-                    1 - probabilities,
-                    probabilities
-                ])
         except Exception as e:
-            print(f"⚠️  Error obteniendo probabilidades: {e}")
-            # Fallback: crear probabilidades artificiales basadas en predicciones
-            probabilities = np.column_stack([
-                np.where(predictions == 0, 0.9, 0.1),
-                np.where(predictions == 1, 0.9, 0.1)
-            ])
-        
+            print(f"⚠️  Error getting probabilities: {e}")
+            # Fallback: create fake probs (won't happen normally)
+            probabilities = np.zeros((len(predictions), 4), dtype=float)
+            for i, p in enumerate(predictions):
+                probabilities[i, int(p)] = 1.0
+
         return predictions, probabilities
 
     def get_feature_importance(self):
         """
-        Obtiene importancia de características
+        Return top 20 feature importances.
         """
         if self.model is None:
             return None
-        
+
         try:
-            feature_names = self.preprocessor.get_feature_names()
             importances = self.model.get_feature_importance()
-            
-            importance_dict = dict(zip(feature_names, importances))
-            sorted_importance = sorted(
-                importance_dict.items(), 
-                key=lambda x: x[1], 
-                reverse=True
-            )
-            
-            return sorted_importance[:20]
+            names = self.feature_names if self.feature_names else [f"f{i}" for i in range(len(importances))]
+
+            pairs = list(zip(names, importances))
+            pairs.sort(key=lambda x: x[1], reverse=True)
+
+            return pairs[:20]
         except Exception as e:
-            print(f"⚠️  Error obteniendo importancia: {e}")
+            print(f"⚠️  Error getting feature importance: {e}")
             return None
 
     def save_model(self, path):
-        """
-        Guarda el modelo a disco
-        """
-        with open(path, 'wb') as f:
-            pickle.dump({
-                'model': self.model,
-                'preprocessor': self.preprocessor,
-                'metrics': self.metrics
-            }, f)
+        with open(path, "wb") as f:
+            pickle.dump(
+                {
+                    "model": self.model,
+                    "preprocessor": self.preprocessor,
+                    "metrics": self.metrics,
+                    "feature_names": self.feature_names
+                },
+                f
+            )
 
     def load_model(self, path):
-        """
-        Carga el modelo desde disco
-        """
-        with open(path, 'rb') as f:
+        with open(path, "rb") as f:
             data = pickle.load(f)
-            self.model = data['model']
-            self.preprocessor = data['preprocessor']
-            self.metrics = data['metrics']
+            self.model = data["model"]
+            self.preprocessor = data["preprocessor"]
+            self.metrics = data.get("metrics", {})
+            self.feature_names = data.get("feature_names", [])
         return True
 
-def train_model_if_needed(model_path=MODEL_PATH, data_path=TRAIN_DATA_PATH):
+
+def train_model_if_needed(train_csv_path=TRAIN_DATA_PATH, model_path=MODEL_PATH):
     """
-    Entrena el modelo si no existe
+    This matches app.py expectations:
+    returns (success: bool, trainer_or_message)
     """
-    import os
-    
     trainer = ModelTrainer()
-    
-    if not os.path.exists(model_path):
-        print(f"📦 Modelo no encontrado. Entrenando nuevo...")
-        trainer.train(data_path)
-    else:
-        print(f"✅ Modelo encontrado. Cargando...")
-        trainer.load_model(model_path)
-    
-    return trainer
+
+    if os.path.exists(model_path):
+        try:
+            print("✅ Model found. Loading...")
+            trainer.load_model(model_path)
+            return True, trainer
+        except Exception:
+            print("⚠️ Model load failed. Retraining...")
+
+    print("📦 Model not found. Training a new one...")
+    ok, res = trainer.train(train_csv_path)
+    if not ok:
+        return False, res
+
+    return True, trainer
+
 
 if __name__ == "__main__":
-    trainer = ModelTrainer()
-    trainer.train()
+    ok, result = train_model_if_needed(TRAIN_DATA_PATH, MODEL_PATH)
+    if not ok:
+        print(result)
