@@ -1,202 +1,230 @@
-# 🎯 Kaggle Predictor - Child Mind Institute Dataset
+🎯 Kaggle Predictor – Child Mind Institute Dataset
 
-Aplicación completa en **Python puro** para predicción de uso problemático de tecnología usando **CatBoost** en datos biométricos del Child Mind Institute.
+A complete pure Python application for predicting problematic technology use using CatBoost on biometric data from the Child Mind Institute dataset.
 
-## 📋 Estructura del Proyecto
-
-```
+📋 Project Structure
 kaggle-predictor/
-├── app.py                 # API Flask principal
-├── train_model.py         # Lógica de entrenamiento CatBoost
-├── preprocess.py          # Preprocesamiento y limpieza de datos
-├── config.py              # Configuración global
-├── requirements.txt       # Dependencias Python
+├── app.py                 # Main Flask API
+├── train_model.py         # CatBoost training logic
+├── preprocess.py          # Data preprocessing and cleaning
+├── config.py              # Global configuration
+├── requirements.txt       # Python dependencies
 │
 ├── data/
-│   └── train.csv          # Archivo de entrenamiento (debes agregarlo)
+│   └── train.csv          # Training file (must be provided)
 │
 ├── templates/
-│   └── index.html         # Frontend HTML
+│   └── index.html         # HTML frontend
 │
 └── static/
-    ├── style.css          # Estilos CSS
-    └── script.js          # Lógica JavaScript
-```
+    ├── style.css          # CSS styles
+    └── script.js          # JavaScript logic
 
-## 🚀 Instalación y Ejecución
-
-### 1. **Instalar dependencias**
-
-```bash
+🚀 Installation and Execution
+1. Install dependencies
 pip install -r requirements.txt
-```
 
-### 2. **Agregar datos de entrenamiento**
+2. Add training data
 
-Coloca tu archivo `train.csv` en la carpeta `data/`:
+Place your train.csv file inside the data/ directory:
 
-```bash
 mkdir -p data
-# Copia tu train.csv aquí
-cp /ruta/a/tu/train.csv data/
-```
+# Copy your train.csv here
+cp /path/to/your/train.csv data/
 
-### 3. **Ejecutar la aplicación**
-
-```bash
+3. Run the application
 python app.py
-```
 
-La aplicación se iniciará en `http://localhost:5000`
 
-La **primera vez** que ejecutes, entrenará automáticamente el modelo con todos los datos.
+The application will start at http://localhost:5000
 
-## 🔧 Arquitectura
+The first time it runs, the model will be trained automatically using all available data.
 
-### Backend (Flask + Python)
+🔧 Architecture
+Backend (Flask + Python)
 
-**`app.py`** - API REST con endpoints:
-- `GET /` - Sirve el frontend
-- `POST /api/predict` - Realiza predicción y **reentrana el modelo**
-- `GET /api/metrics` - Retorna métricas del modelo actual
-- `GET /api/feature-importance` - Retorna top 20 características importantes
+app.py – REST API with the following endpoints:
 
-**`train_model.py`** - Clase `ModelTrainer`:
-- Entrena CatBoost automáticamente
-- Calcula métricas: Accuracy, Precision, Recall, F1, ROC-AUC
-- Obtiene importancia de características
-- Guarda/carga modelo en pickle
+GET / – Serves the frontend
 
-**`preprocess.py`** - Clase `DataPreprocessor`:
-- Identifica columnas categóricas y numéricas
-- Imputa valores faltantes con estrategia 'median'
-- Codifica variables categóricas con LabelEncoder
-- Transforma datos para el modelo
+POST /api/predict – Performs prediction and re-trains the model
 
-### Frontend (HTML/CSS/JS puro)
+GET /api/metrics – Returns current model metrics
 
-- **Upload drag-and-drop** de archivos CSV/Parquet
-- **Visualización de métricas** del modelo en tiempo real
-- **Tabla de predicciones** con probabilidades
-- **Gráfico de importancia** de características
-- **Descarga de resultados** en CSV
-- Interfaz **responsiva** y moderna
+GET /api/feature-importance – Returns top 20 most important features
 
-## 📊 Flujo de Uso
+train_model.py – ModelTrainer class:
 
-1. **Usuario sube archivo** (CSV o Parquet)
-2. **Sistema entrena modelo** con los datos de `data/train.csv`
-3. **Predicción en archivo subido**
-4. **Visualización de resultados** en tabla interactiva
-5. **Descarga de predicciones** en CSV
+Automatically trains CatBoost
 
-## ⚙️ Configuración
+Computes metrics: Accuracy, Precision, Recall, F1, ROC-AUC
 
-Edita `config.py` para ajustar:
+Extracts feature importance
 
-```python
-DEBUG = True                    # Modo debug
-PORT = 5000                     # Puerto del servidor
-CATBOOST_ITERATIONS = 100       # Número de iteraciones del modelo
-TRAIN_TEST_SPLIT = 0.2          # (No usado actualmente, entrena con todo)
-```
+Saves/loads the model using pickle
 
-## 📦 Dependencias
+preprocess.py – DataPreprocessor class:
 
-- **Flask** - Framework web
-- **CatBoost** - Modelo de gradiente boosting
-- **Pandas** - Manipulación de datos
-- **Scikit-learn** - Preprocesamiento y métricas
+Identifies categorical and numerical columns
 
-## 🔄 Reentrenamiento
+Imputes missing values using the median strategy
 
-**Importante**: Cada vez que realizas una predicción, el modelo se **reentrana completamente** con los datos de `data/train.csv`.
+Encodes categorical variables with LabelEncoder
 
-Para cambiar esto, edita en `app.py`:
+Transforms data for the model
 
-```python
+Frontend (Pure HTML / CSS / JS)
+
+Drag-and-drop upload for CSV/Parquet files
+
+Real-time visualization of model metrics
+
+Prediction table with probabilities
+
+Feature importance chart
+
+CSV download of prediction results
+
+Modern and responsive UI
+
+📊 Usage Flow
+
+User uploads a file (CSV or Parquet)
+
+System trains the model using data/train.csv
+
+Prediction is performed on the uploaded file
+
+Results are displayed in an interactive table
+
+Predictions can be downloaded as CSV
+
+⚙️ Configuration
+
+Edit config.py to adjust:
+
+DEBUG = True                    # Debug mode
+PORT = 5000                     # Server port
+CATBOOST_ITERATIONS = 100       # Number of model iterations
+TRAIN_TEST_SPLIT = 0.2          # (Not currently used, trains on full dataset)
+
+📦 Dependencies
+
+Flask – Web framework
+
+CatBoost – Gradient boosting model
+
+Pandas – Data manipulation
+
+Scikit-learn – Preprocessing and metrics
+
+🔄 Retraining Behavior
+
+Important: Every time a prediction is made, the model is fully retrained using data/train.csv.
+
+To disable this behavior, edit app.py:
+
 @app.route('/api/predict', methods=['POST'])
 def predict():
     # ...
-    # Comentar estas líneas si no quieres reentrenar:
-    trainer.train(TRAIN_DATA_PATH)  # ← AQUÍ
-```
+    # Comment out this line if retraining is not desired:
+    trainer.train(TRAIN_DATA_PATH)  # ← HERE
 
-## 📈 Métricas Calculadas
+📈 Metrics Computed
 
-- **Accuracy** - Exactitud general del modelo
-- **Precision** - Proporción de positivos correctos
-- **Recall** - Capacidad de detectar positivos
-- **F1 Score** - Balance entre Precision y Recall
-- **ROC-AUC** - Área bajo la curva ROC
+Accuracy – Overall correctness
 
-## 🎯 Columnas Esperadas
+Precision – Proportion of correct positive predictions
 
-Tu archivo debe incluir:
-- Todas las columnas biométricas (BMI, HR, Weight, etc.)
-- Columnas PCIAT (cuestionario de uso de internet)
-- Columnas SDS (escala de somnolencia)
-- Columna **`sii`** como target (0 = No problemático, 1 = Problemático)
-- Columna **`id`** para identificación (opcional)
+Recall – Ability to detect positives
 
-## 🐛 Troubleshooting
+F1 Score – Balance between Precision and Recall
 
-### Error: "Archivo no encontrado"
-- Verifica que `data/train.csv` existe en la carpeta correcta
+ROC-AUC – Area under the ROC curve
 
-### Error: "Modelo no entrenado"
-- Ejecuta `python app.py` de nuevo para entrenar inicialmente
+🎯 Expected Columns
 
-### Predicción lenta
-- Reduce `CATBOOST_ITERATIONS` en `config.py`
-- Usa muestras más pequeñas en tus archivos de prueba
+Your dataset should include:
 
-## 📝 Ejemplo de Uso
+All biometric columns (BMI, HR, Weight, etc.)
 
-```bash
-# Terminal 1: Iniciar servidor
+PCIAT questionnaire columns
+
+SDS (sleepiness scale) columns
+
+sii column as target
+
+0 = Non-problematic
+
+1 = Problematic
+
+id column for identification (optional)
+
+🐛 Troubleshooting
+Error: “File not found”
+
+Make sure data/train.csv exists in the correct directory
+
+Error: “Model not trained”
+
+Restart the application using python app.py to trigger training
+
+Slow predictions
+
+Reduce CATBOOST_ITERATIONS in config.py
+
+Use smaller input files for testing
+
+📝 Example Usage
+# Terminal 1: Start server
 python app.py
 
-# Terminal 2: Abrir navegador
-# Ir a http://localhost:5000
-# 1. Arrastrar archivo CSV/Parquet
-# 2. Click en "Realizar Predicción"
-# 3. Ver resultados en tabla
-# 4. Descargar CSV con resultados
-```
+# Terminal 2: Open browser
+# Go to http://localhost:5000
+# 1. Drag and drop CSV/Parquet file
+# 2. Click "Run Prediction"
+# 3. View results in table
+# 4. Download CSV with predictions
 
-## 🎨 Personalización
+🎨 Customization
+Change colors
 
-### Cambiar colores
-Edita las variables CSS en `static/style.css`:
-```css
+Edit CSS variables in static/style.css:
+
 :root {
-    --primary-color: #2563eb;  /* Azul principal */
-    --success-color: #10b981;  /* Verde */
-    --danger-color: #ef4444;   /* Rojo */
+    --primary-color: #2563eb;  /* Primary blue */
+    --success-color: #10b981;  /* Green */
+    --danger-color: #ef4444;   /* Red */
 }
-```
 
-### Cambiar texto
-Edita `templates/index.html` directamente
+Change text
 
-## 📞 Notas Técnicas
+Edit templates/index.html directly
 
-- Usa **pickle** para guardar/cargar modelos
-- Los valores numéricos se imputan con **mediana**
-- Las categorías se codifican con **LabelEncoder**
-- CatBoost se configura con `task_type='CPU'`
-- Flask permite CORS (Cross-Origin Requests)
+📞 Technical Notes
 
-## ✅ Checklist Inicial
+Uses pickle to save/load models
 
-- [ ] Python 3.8+ instalado
-- [ ] `requirements.txt` instalado
-- [ ] `data/train.csv` en carpeta `data/`
-- [ ] Puerto 5000 disponible
-- [ ] Ejecutar `python app.py`
-- [ ] Abrir `http://localhost:5000`
+Numerical values are imputed using median
 
----
+Categorical variables are encoded with LabelEncoder
 
-**Creado para Kaggle Competition - Child Mind Institute Dataset**
+CatBoost runs with task_type='CPU'
+
+Flask supports CORS (Cross-Origin Requests)
+
+✅ Initial Checklist
+
+ Python 3.8+ installed
+
+ Dependencies installed (requirements.txt)
+
+ data/train.csv present
+
+ Port 5000 available
+
+ Run python app.py
+
+ Open http://localhost:5000
+
+Built for the Kaggle Competition – Child Mind Institute Dataset
