@@ -1,6 +1,6 @@
 🎯 Kaggle Predictor – Child Mind Institute Dataset
 
-A complete pure Python application for predicting problematic technology use using CatBoost on biometric data from the Child Mind Institute dataset.
+A complete pure Python application for predicting problematic technology use using CatBoost on Child Mind Institute biometric data.
 
 📋 Project Structure
 kaggle-predictor/
@@ -11,7 +11,7 @@ kaggle-predictor/
 ├── requirements.txt       # Python dependencies
 │
 ├── data/
-│   └── train.csv          # Training file (must be provided)
+│   └── train.csv          # Training file (you must add it)
 │
 ├── templates/
 │   └── index.html         # HTML frontend
@@ -26,7 +26,7 @@ pip install -r requirements.txt
 
 2. Add training data
 
-Place your train.csv file inside the data/ directory:
+Place your train.csv file inside the data/ folder:
 
 mkdir -p data
 # Copy your train.csv here
@@ -38,20 +38,20 @@ python app.py
 
 The application will start at http://localhost:5000
 
-The first time it runs, the model will be trained automatically using all available data.
+The first time you run it, the model will automatically train using the full dataset.
 
 🔧 Architecture
 Backend (Flask + Python)
 
-app.py – REST API with the following endpoints:
+app.py – REST API with endpoints:
 
 GET / – Serves the frontend
 
-POST /api/predict – Performs prediction and re-trains the model
+POST /api/predict – Runs prediction and re-trains the model
 
 GET /api/metrics – Returns current model metrics
 
-GET /api/feature-importance – Returns top 20 most important features
+GET /api/feature-importance – Returns top 20 feature importances
 
 train_model.py – ModelTrainer class:
 
@@ -65,15 +65,15 @@ Saves/loads the model using pickle
 
 preprocess.py – DataPreprocessor class:
 
-Identifies categorical and numerical columns
+Detects categorical and numerical columns
 
 Imputes missing values using the median strategy
 
 Encodes categorical variables with LabelEncoder
 
-Transforms data for the model
+Transforms data for model consumption
 
-Frontend (Pure HTML / CSS / JS)
+Frontend (Pure HTML/CSS/JS)
 
 Drag-and-drop upload for CSV/Parquet files
 
@@ -83,9 +83,9 @@ Prediction table with probabilities
 
 Feature importance chart
 
-CSV download of prediction results
+Downloadable CSV results
 
-Modern and responsive UI
+Modern and responsive interface
 
 📊 Usage Flow
 
@@ -93,7 +93,7 @@ User uploads a file (CSV or Parquet)
 
 System trains the model using data/train.csv
 
-Prediction is performed on the uploaded file
+Predictions are generated for the uploaded file
 
 Results are displayed in an interactive table
 
@@ -106,7 +106,7 @@ Edit config.py to adjust:
 DEBUG = True                    # Debug mode
 PORT = 5000                     # Server port
 CATBOOST_ITERATIONS = 100       # Number of model iterations
-TRAIN_TEST_SPLIT = 0.2          # (Not currently used, trains on full dataset)
+TRAIN_TEST_SPLIT = 0.2          # (Currently unused – trains on full data)
 
 📦 Dependencies
 
@@ -127,10 +127,10 @@ To disable this behavior, edit app.py:
 @app.route('/api/predict', methods=['POST'])
 def predict():
     # ...
-    # Comment out this line if retraining is not desired:
+    # Comment out this line if you do NOT want retraining:
     trainer.train(TRAIN_DATA_PATH)  # ← HERE
 
-📈 Metrics Computed
+📈 Computed Metrics
 
 Accuracy – Overall correctness
 
@@ -148,32 +148,28 @@ Your dataset should include:
 
 All biometric columns (BMI, HR, Weight, etc.)
 
-PCIAT questionnaire columns
+PCIAT columns (internet usage questionnaire)
 
-SDS (sleepiness scale) columns
+SDS columns (sleepiness scale)
 
-sii column as target
-
-0 = Non-problematic
-
-1 = Problematic
+sii column as target (0 = Non-problematic, 1 = Problematic)
 
 id column for identification (optional)
 
 🐛 Troubleshooting
-Error: “File not found”
+Error: "File not found"
 
-Make sure data/train.csv exists in the correct directory
+Ensure data/train.csv exists in the correct directory
 
-Error: “Model not trained”
+Error: "Model not trained"
 
-Restart the application using python app.py to trigger training
+Run python app.py again to perform initial training
 
 Slow predictions
 
 Reduce CATBOOST_ITERATIONS in config.py
 
-Use smaller input files for testing
+Use smaller test files
 
 📝 Example Usage
 # Terminal 1: Start server
@@ -181,7 +177,7 @@ python app.py
 
 # Terminal 2: Open browser
 # Go to http://localhost:5000
-# 1. Drag and drop CSV/Parquet file
+# 1. Drag & drop CSV/Parquet file
 # 2. Click "Run Prediction"
 # 3. View results in table
 # 4. Download CSV with predictions
@@ -203,23 +199,23 @@ Edit templates/index.html directly
 
 📞 Technical Notes
 
-Uses pickle to save/load models
+Uses pickle for model persistence
 
 Numerical values are imputed using median
 
-Categorical variables are encoded with LabelEncoder
+Categorical values are encoded with LabelEncoder
 
 CatBoost runs with task_type='CPU'
 
-Flask supports CORS (Cross-Origin Requests)
+Flask allows CORS (Cross-Origin Requests)
 
 ✅ Initial Checklist
 
  Python 3.8+ installed
 
- Dependencies installed (requirements.txt)
+ requirements.txt installed
 
- data/train.csv present
+ data/train.csv present in data/
 
  Port 5000 available
 
@@ -227,4 +223,4 @@ Flask supports CORS (Cross-Origin Requests)
 
  Open http://localhost:5000
 
-Built for the Kaggle Competition – Child Mind Institute Dataset
+Built for Kaggle Competition – Child Mind Institute Dataset
